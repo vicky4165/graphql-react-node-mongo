@@ -1,17 +1,17 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const graphqlHttp = require("express-graphql");
-const mongoose = require("mongoose");
+const express = require('express');
+const bodyParser = require('body-parser');
+const graphqlHttp = require('express-graphql');
+const mongoose = require('mongoose');
 
-const graphQlSchema = require("./graphql/schema/index");
-const graphQlResolvers = require("./graphql/resolvers/index");
+const graphQlSchema = require('./graphql/schema/index');
+const graphQlResolvers = require('./graphql/resolvers/index');
 
 const app = express();
 
 app.use(bodyParser.json());
 
 app.use(
-  "/graphql",
+  '/graphql',
   graphqlHttp({
     schema: graphQlSchema,
     rootValue: graphQlResolvers,
@@ -20,9 +20,13 @@ app.use(
 );
 
 mongoose
-  .connect(process.env.MONGO_DB, { useNewUrlParser: true })
+  .connect(
+    `mongodb+srv://${process.env.MONGO_USER}:${
+      process.env.MONGO_PASSWORD
+    }@cluster0-ntrwp.mongodb.net/${process.env.MONGO_DB}?retryWrites=true`
+  )
   .then(() => {
-    app.listen(3000, () => console.log("Server Started"));
+    app.listen(3000);
   })
   .catch(err => {
     console.log(err);
